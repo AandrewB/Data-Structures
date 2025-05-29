@@ -1,0 +1,50 @@
+// Name: Andrew Burgos
+
+// Class: CS 3305/Section W02
+
+// Term: Fall 2025
+
+// Instructor: Umama Tasnim
+import java.util.Scanner;
+
+public class AverageGrade {
+
+
+static double ComputeAverage(int[] num, int size){ // recursive method to compute the average grade
+    if (size == 1)
+        return (double)num[size-1];
+    else
+        return ((double)(ComputeAverage(num, size-1)*(size-1) + num[size-1]) / size);
+
+}
+
+    public static void main(String[] args){
+        Scanner scan = new Scanner(System.in);
+        int size;
+        int counter = 1;
+
+        System.out.print("Class size: ");
+        size = scan.nextInt();
+
+        int[]grades = new int[size]; //creates new array with the size being what user entered
+
+        for (int j=0; j<size; j++) { // fills array with user grades
+            System.out.print("Enter grade " + counter++ + ": ");
+            int num = scan.nextInt();
+            grades[j] = num;
+
+        }
+
+        System.out.println("\nClass size: " + size);
+        System.out.print("Entered Grades: ");
+
+        for (int i = 0;i<grades.length; i++){ //prints array
+            System.out.print(grades[i] + " ");
+        }
+
+       double inte = ComputeAverage(grades, size);
+        String ger = String.format("%.2f", inte);
+        System.out.printf( "\nClass average " + ger);
+    }
+}
+

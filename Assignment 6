@@ -1,0 +1,155 @@
+public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    // Constructor to initialize the key
+    public TreeNode(int key) {
+        val = key;
+        left = right = null;
+    }
+}
+public class BinarySearchTree {
+    private TreeNode root;
+
+    // Inserts a value into the BST
+    public void insert(int key) {
+        root = insertRec(root, key);
+    }
+
+    // Recursive method for insert
+    private TreeNode insertRec(TreeNode root, int key) {
+        if (root == null) {
+            return new TreeNode(key); // Create a new node if empty
+        }
+
+        // Go left or right
+        if (key < root.val)
+            root.left = insertRec(root.left, key);
+        else if (key > root.val)
+            root.right = insertRec(root.right, key);
+
+        return root;
+    }
+
+    // Searches for a key in the BST
+    public boolean search(int key) {
+        return searchRec(root, key);
+    }
+
+    // Recursive method for search
+    private boolean searchRec(TreeNode root, int key) {
+        if (root == null) return false;
+        if (root.val == key) return true;
+
+        // Search in left or right subtree
+        return key < root.val ? searchRec(root.left, key) : searchRec(root.right, key);
+    }
+
+    // Deletes a key from the BST
+    public void delete(int key) {
+        root = deleteRec(root, key);
+    }
+
+    // Recursive method for delete
+    private TreeNode deleteRec(TreeNode root, int key) {
+        if (root == null) return null;
+
+        // selects the node to be deleted
+        if (key < root.val)
+            root.left = deleteRec(root.left, key);
+        else if (key > root.val)
+            root.right = deleteRec(root.right, key);
+        else {
+
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+
+
+            root.val = minValue(root.right);
+
+            root.right = deleteRec(root.right, root.val);
+        }
+
+        return root;
+    }
+
+    // method to find the minimum value node in a tree
+    private int minValue(TreeNode root) {
+        int min = root.val;
+        while (root.left != null) {
+            root = root.left;
+            min = root.val;
+        }
+        return min;
+    }
+
+
+    public void inorderTraversal() {
+        inorderRec(root);
+        System.out.println();
+    }
+
+    // Recursive method for inorder traversal
+    private void inorderRec(TreeNode root) {
+        if (root != null) {
+            inorderRec(root.left);
+            System.out.print(root.val + " ");
+            inorderRec(root.right);
+        }
+    }
+
+    // finds the height of the BST
+    public int height() {
+        return heightRec(root);
+    }
+
+    // Recursive method to find the height
+    private int heightRec(TreeNode node) {
+        if (node == null) return 0;
+        int leftHeight = heightRec(node.left);
+        int rightHeight = heightRec(node.right);
+        return Math.max(leftHeight, rightHeight) + 1; // +1 for the current node
+    }
+}
+// Name: Andrew
+// Class: CS 3305/Section W02
+// Term: Spring 2025
+// Instructor: Umama Tasnim
+// Assignment: 6
+public class BSTDemo {
+    public static void main(String[] args) {
+
+        BinarySearchTree bst = new BinarySearchTree();
+
+        int[] keys = {50, 30, 70, 20, 40, 60, 80};
+
+        System.out.print("Inserted: ");
+        for (int key : keys) {
+            bst.insert(key);
+            System.out.print(key + " ");
+        }
+        System.out.println();
+
+
+        System.out.print("Inorder Traversal: ");
+        bst.inorderTraversal();
+
+
+        System.out.println("Search 40: " + (bst.search(40) ? "Found" : "Not Found"));
+        System.out.println("Search 90: " + (bst.search(90) ? "Found" : "Not Found"));
+
+
+        System.out.println("Deleting 50...");
+        bst.delete(50);
+
+
+        System.out.print("Inorder Traversal after deletion: ");
+        bst.inorderTraversal();
+
+
+        System.out.println("Height of BST: " + bst.height());
+    }
+}

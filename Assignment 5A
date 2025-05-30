@@ -1,0 +1,45 @@
+// Name: Andrew
+// Class: CS 3305/Section W02
+// Term: Spring 2025
+// Instructor: Umama Tasnim
+// Assignment: 5
+import java.util.*;
+
+public class bucketSorting {
+    public static void main(String[] args) {
+        int[] arr = {31, 920, 73, 824, 3, 51, 700}; // initializing array
+
+        System.out.println("Unsorted Array: " + Arrays.toString(arr));
+
+        bucketSort(arr); // using bucket sort method to sort array
+
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+
+    public static void bucketSort(int[] arr) { // method to sort array using bucket sort
+
+        int maxVal = getMax(arr);
+        int[] bucket = new int[maxVal + 1];
+
+        for (int i = 0; i < arr.length; i++) {
+            bucket[arr[i]]++;
+        }
+
+        int pos = 0;
+        for (int i = 0; i < bucket.length; i++) {
+            for (int j = 0; j < bucket[i]; j++) {
+                arr[pos++] = i;
+            }
+        }
+    }
+
+    public static int getMax(int[] arr) { //finds the max value in the array
+        int maxVal = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > maxVal) {
+                maxVal = arr[i];
+            }
+        }
+        return maxVal;
+    }
+}

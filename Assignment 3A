@@ -1,0 +1,144 @@
+// Name: Andrew Burgos
+
+// Class: CS 3305/Section W02
+
+// Term: Fall 2025
+
+// Umama Tasnim
+import java.util.*;
+
+public class testStack {
+    // function to form stack from top to bottom
+    public static void topToBottom(Stack<Integer> stack) {
+        Stack<Integer> tempStack = new Stack<>();
+        while (!stack.isEmpty()) {
+            int item = stack.pop();
+            System.out.print(item + " ");
+            tempStack.push(item);
+        }
+
+        while (!tempStack.isEmpty()) {
+            stack.push(tempStack.pop());
+        }
+
+    }
+// function to form stack from bottom to top
+    public static void bottomToTop(Stack<Double> stack) {
+        List<Double> temp = new ArrayList<>(stack);
+        Collections.reverse(temp);
+        for (Double d : temp) {
+            System.out.print(d + " ");
+        }
+        System.out.println();
+    }
+
+// function to flip the stack
+    public static Stack<String> flipStack(Stack<String> stack) {
+        Stack<String> temp = new Stack<>();
+        while (!stack.isEmpty()) {
+            temp.push(stack.pop());
+        }
+        return temp;
+    }
+
+// function to search the stack for specific integer
+    public static boolean searchStack(Stack<Integer> stack, int target) {
+        return stack.contains(target);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        do { // do while to keep program running until user decides to stop
+            System.out.println("\n----- MAIN MENU -----");
+            System.out.println("1. Test function topToBottom with integer stack");
+            System.out.println("2. Test function bottomToTop with double stack");
+            System.out.println("3. Test function flipStack with string stack");
+            System.out.println("4. Test function searchStack with integer stack");
+            System.out.println("5. Exit program");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:// case using the topToBottom function made to arrange stacks from top to bottom
+                    System.out.println("\nTesting function topToBottom:");
+                    System.out.print("Enter integers to push onto the stack (space-separated): ");
+                    String[] intInput = sc.nextLine().split(" ");
+                    Stack<Integer> intStack = new Stack<>();
+                    for (String s : intInput) {
+                        intStack.push(Integer.parseInt(s));
+                    }
+                    System.out.println("Stack content: ");
+                    topToBottom(intStack);
+                    System.out.print("\n");
+                    System.out.println("Function output: ");
+                    topToBottom(intStack);
+
+                    break;
+
+                case 2:// case using the bottomToTop function made to arrange stacks from bottom to top
+                    System.out.println("\nTesting function bottomToTop:");
+                    System.out.print("Enter doubles to push onto the stack (space-separated): ");
+                    String[] doubleInput = sc.nextLine().split(" ");
+                    Stack<Double> doubleStack = new Stack<>();
+                    for (String s : doubleInput) {
+                        doubleStack.push(Double.parseDouble(s));
+                    }
+                    System.out.println("Stack content: ");
+                    bottomToTop(doubleStack);
+                    System.out.println("Function output: ");
+                    for (String s : doubleInput) {
+                        System.out.print(s + " ");;
+                    }
+
+                    break;
+
+                case 3: // case using the flipStack function to flip String stacks
+                    System.out.println("\nTesting function flipStack:");
+                    System.out.print("Enter strings to push onto the stack (space-separated): ");
+                    String[] stringInput = sc.nextLine().split(" ");
+                    Stack<String> stringStack = new Stack<>();
+                    for (String s : stringInput) {
+                        stringStack.push(s);
+                    }
+                    System.out.print("Stack content before calling flipStack: ");
+                    for (String s : stringStack) {
+                        System.out.print(s + " ");
+                    }
+                    System.out.println();
+                    stringStack = flipStack(stringStack);
+                    System.out.print("Stack content after calling flipStack: ");
+                    for (String s : stringStack) {
+                        System.out.print(s + " ");
+                    }
+                    System.out.println();
+                    break;
+
+                case 4: // case using the searchStack to find if specific number is in the stack
+                    System.out.println("\nTesting function searchStack:");
+                    System.out.print("Enter integers to push onto the stack (space-separated): ");
+                    intInput = sc.nextLine().split(" ");
+                    intStack = new Stack<>();
+                    for (String s : intInput) {
+                        intStack.push(Integer.parseInt(s));
+                    }
+                    System.out.print("Enter target value to search for: ");
+                    int target = sc.nextInt();
+                    sc.nextLine();
+                    boolean found = searchStack(intStack, target);
+                    System.out.println("Function output: " + found);
+                    break;
+
+                case 5: // case to end program
+                    System.out.println("Exiting program...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please select again.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}

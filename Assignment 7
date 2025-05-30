@@ -1,0 +1,178 @@
+// Name: Andrew Burgos
+
+// Class: CS 3305/Section#
+
+// Term: Fall 2025
+
+// Instructor: Umama Tasnim
+import java.util.Scanner;
+
+public class HashFunctions {
+
+    static int[][] Table = new int[50][2];
+    static int[] keys = {1234, 8234, 7867, 1009, 5438, 4312, 3420, 9487, 5418, 5299, 5078, 8239, 1208, 5098, 5195, 5329, 4543, 3344, 7698, 5412, 5567, 5672, 7934, 1254, 6091, 8732, 3095, 1975, 3843, 5589, 5439, 8907, 4097, 3096, 4310, 5298, 9156, 3895, 6673, 7871, 5787, 9289, 4553, 7822, 8755, 3398, 6774, 8289, 7665, 5523};  // Set of keys to hash.
+
+    // sets all table entries to empty slots and probes to 0.
+    static {
+        for (int i = 0; i < 50; i++) {
+            Table[i][0] = -1;
+            Table[i][1] = 0;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+
+        do { // do while loop until user enters 5
+            System.out.println("\n\n-MAIN MENU---");
+            System.out.println("1. Run HF1 (Division method with Linear Probing)");
+            System.out.println("2. Run HF2 (Division method with Quadratic Probing)");
+            System.out.println("3. Run HF3 (Division method with Double Hashing)");
+            System.out.println("4. Run HF4 (Student Designed HF)");
+            System.out.println("5. Exit program");
+            System.out.print("Enter option number: ");
+
+            option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    runHF1();
+                    break;
+                case 2:
+                    runHF2();
+                    break;
+                case 3:
+                    runHF3();
+                    break;
+                case 4:
+                    runHF4();
+                    break;
+                case 5:
+                    System.out.println("Exiting program...");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please enter a number between 1 and 5.");
+            }
+        } while (option != 5);
+    }
+
+    // method to find the sum of all probe values in the table
+    static int sumProbes() {
+        int sum = 0;
+
+        for (int i = 0; i < 50; i++) {
+            sum += Table[i][1];
+        }
+        return sum;
+    }
+
+    // HF1 (Division method with Linear Probing)
+    static void runHF1() {
+        resetTable();
+        for (int key : keys) {
+            int index = key % 50;
+            int probes = 0;
+
+            while (Table[index][0] != -1) {
+                index = (index + 1) % 50;
+                probes++;
+            }
+            Table[index][0] = key;
+            Table[index][1] = probes;
+        }
+        displayTable();
+    }
+
+    // HF2 (Division method with Quadratic Probing)
+    static void runHF2() {
+        resetTable();
+        for (int key : keys) {
+            int initialIndex = key % Table.length;
+            int index = initialIndex;
+            int probeCount = 1;
+
+
+            while (Table[index][0] != -1 && Table[index][0] != key && probeCount <= 50) {
+                index = (initialIndex + probeCount * probeCount) % Table.length;  // Calculate next index
+                probeCount++;  // Increment probe count
+            }
+
+
+            if (Table[index][0] == -1 || Table[index][0] == key) {
+                Table[index][0] = key;
+                Table[index][1] = probeCount;  // Store the probe count
+            } else {
+                System.out.println("Unable to hash key " + key + " to the Table");  // Error message if unable to hash
+            }
+        }
+        displayTable();
+    }
+
+    // HF3 (Division method with Double Hashing)
+    static void runHF3() {
+        resetTable();
+        for (int key : keys) {
+            int index = key % 50;
+            int H2 = 30 - key % 25;
+            int probes = 0;
+
+            while (Table[index][0] != -1 && probes < 50) {
+                index = (index + H2) % 50;
+                probes++;
+            }
+
+            if (probes == 50) {
+                System.out.println("Unable to hash key " + key + " to the table");
+            } else {
+                Table[index][0] = key;
+                Table[index][1] = probes;
+            }
+        }
+        displayTable();
+    }
+
+    // HF4 (Student Designed HF) - Custom probing with step-size multiplier of 3
+    static void runHF4() {
+        resetTable();  // Reset the table to empty slots
+        for (int key : keys) {
+            int initialIndex = key % Table.length;  // Hash the key using modulo
+            int index = initialIndex;
+            int probeCount = 1;
+
+
+            while (Table[index][0] != -1 && Table[index][0] != key && probeCount <= 50) {
+                index = (initialIndex + 3 * probeCount * probeCount) % Table.length;  // Quadratic probing with multiplier of 3
+                probeCount++;  // Increment probe count
+            }
+
+            // Insert key if empty slot or matching key is found
+            if (Table[index][0] == -1 || Table[index][0] == key) {
+                Table[index][0] = key;
+                Table[index][1] = probeCount;  // Store the probe count
+            } else {
+                System.out.println("Unable to hash key " + key + " to the table");
+            }
+        }
+        displayTable();
+    }
+
+    // Reset the table before each new hashing run
+    static void resetTable() {
+        for (int i = 0; i < 50; i++) {
+            Table[i][0] = -1;
+            Table[i][1] = 0;
+        }
+    }
+
+    // Method to display the table and sum of probes
+    static void displayTable() {
+        System.out.println("\nHash table resulted from the hash function:");
+        System.out.println(String.format("%-10s %-10s %-10s", "Index", "Key", "Probes"));
+
+        for (int i = 0; i < 50; i++) {
+            System.out.println(String.format("%-10d %-10d %-10d", i, Table[i][0], Table[i][1]));
+        }
+        System.out.println("Sum of probes: " + sumProbes());
+    }
+}
